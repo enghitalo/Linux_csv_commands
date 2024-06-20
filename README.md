@@ -32,6 +32,6 @@ tail -n +2 data.csv | awk -F, '{sum=$1+$3; print sum","$4}' OFS=, | sed '1icolum
    - **`awk -F, '{sum=$1+$3; print sum","$4}' OFS=,`**: This command uses `awk` to process each line of the CSV file.
      - `-F,` sets the field separator to a comma.
      - `{sum=$1+$3; print sum","$4}` calculates the sum of `column_a` (`$1`) and `column_c` (`$3`), and prints the result along with `column_d` (`$4`).
-     - `OFS=,` sets the output field separator to a comma, ensuring the output remains in CSV format.
+     - `OFS=,` sets the ***Output Field Separator*** to a comma, ensuring the output remains in CSV format.
 
    - **`sed '1icolumn_a_plus_column_c,column_d'`**: This command uses `sed` to insert a new header row at the beginning of the output. The `1i` command tells `sed` to insert the following text before the first line.
