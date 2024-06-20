@@ -22,7 +22,11 @@ column --separator "," --table output.csv
 ```sh
 # sum the values in column_a and column_c, exclude column_b, and output the result.
 # The pipeline reads the CSV file, processes it to sum `column_a` and `column_c`, excludes `column_b`, and adds a new header row to the output. This approach is efficient for processing large CSV files as it uses stream processing without creating intermediate files.
-tail --lines=+2 output.csv | awk --field-separator ',' '{sum=$1+$3; print sum","$4}' OFS="," | sed '1icolumn_a_plus_column_c,column_d'
+tail --lines=+2 output.csv | awk --field-separator ',' '{sum=$1+$3; print sum","$4}' OFS="," | sed '1i\sum_a_plus_c,column_d' 
+```
+**Pretty**
+```sh
+tail --lines=+2 output.csv | awk --field-separator ',' '{sum=$1+$3; print sum","$4}' OFS="," | sed '1i\sum_a_plus_c,column_d' | column --separator "," --table
 ```
 
    Here's a breakdown of what each command does:
@@ -34,4 +38,4 @@ tail --lines=+2 output.csv | awk --field-separator ',' '{sum=$1+$3; print sum","
      - `{sum=$1+$3; print sum","$4}` calculates the sum of `column_a` (`$1`) and `column_c` (`$3`), and prints the result along with `column_d` (`$4`).
      - `OFS=,` sets the ***Output Field Separator*** to a comma, ensuring the output remains in CSV format.
 
-   - **`sed '1icolumn_a_plus_column_c,column_d'`**: This command uses `sed` to insert a new header row at the beginning of the output. The `1i` command tells `sed` to insert the following text before the first line.
+   - **`sed '1i\sum_a_plus_c,column_d'`**: This command uses `sed` to insert a new header row. The `1i` indicates that the line should be inserted before the first line.
