@@ -54,7 +54,7 @@ comm -3 <(sort -t, -k1,1 file1.csv) <(sort -t, -k1,1 file2.csv)
 ```
 
 **Transform each file**, **Sort the results** and **Compare the sorted results**
-```
+```sh
 comm -3 <(tail --lines=+2 file1.csv | awk -F ',' '{sum=$1+$3; print sum","$4}' | sed '1i\sum_a_plus_c,column_d' | sort) \
 <(tail --lines=+2 file2.csv | awk -F ',' '{sum=$1+$3; print sum","$4}' | sed '1i\sum_a_plus_c,column_d' | sort)
 ```
@@ -65,3 +65,18 @@ comm -3 <(tail --lines=+2 file1.csv | awk -F ',' '{sum=$1+$3; print sum","$4}' |
 4. `sort`: Sort the output to ensure it's in the correct order for comparison.
 5. Repeat the same transformation for `file2.csv`.
 6. `comm -3`: Compare the sorted results, showing lines unique to each file.
+
+## Insert Data on Postgres
+```sql
+CREATE TABLE information (
+    id SERIAL PRIMARY KEY,
+    sum_a_plus_c INT,
+    column_d INT
+);
+```
+```sh
+cat data.csv | psql --dbname=postgres://postgres:123456@localhost:5432/test --command "COPY information(sum_a_plus_c, column_d) FROM STDIN WITH (FORMAT csv, DELIMITER ',', HEADER true);"
+```
+
+
+
