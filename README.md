@@ -39,3 +39,29 @@ tail --lines=+2 output.csv | awk --field-separator ',' '{sum=$1+$3; print sum","
      - `OFS=,` sets the ***Output Field Separator*** to a comma, ensuring the output remains in CSV format.
 
    - **`sed '1i\sum_a_plus_c,column_d'`**: This command uses `sed` to insert a new header row. The `1i` indicates that the line should be inserted before the first line.
+
+
+## Compare
+
+```sh
+# e.g.
+diff file1.csv file2.csv
+
+# e.g.
+diff <(sort -t, -k1,1 file1.csv) <(sort -t, -k1,1 file2.csv)
+# or
+comm -3 <(sort -t, -k1,1 file1.csv) <(sort -t, -k1,1 file2.csv)
+```
+
+**Transform each file**, **Sort the results** and **Compare the sorted results**
+```
+comm -3 <(tail --lines=+2 file1.csv | awk -F ',' '{sum=$1+$3; print sum","$4}' | sed '1i\sum_a_plus_c,column_d' | sort) \
+<(tail --lines=+2 file2.csv | awk -F ',' '{sum=$1+$3; print sum","$4}' | sed '1i\sum_a_plus_c,column_d' | sort)
+```
+
+1. `tail --lines=+2 file1.csv`: Skip the header row in `file1.csv`.
+2. `awk -F ',' '{sum=$1+$3; print sum","$4}'`: Compute the sum of the first and third columns, then print the sum and the fourth column, separated by a comma.
+3. `sed '1i\sum_a_plus_c,column_d'`: Add a new header row with the specified column names.
+4. `sort`: Sort the output to ensure it's in the correct order for comparison.
+5. Repeat the same transformation for `file2.csv`.
+6. `comm -3`: Compare the sorted results, showing lines unique to each file.
