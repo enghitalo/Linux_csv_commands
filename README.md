@@ -75,12 +75,19 @@ CREATE TABLE information (
 );
 ```
 ```sh
-cat data.csv | psql --dbname=postgres://postgres:123456@localhost:5432/test --command "COPY information(sum_a_plus_c, column_d) FROM STDIN WITH (FORMAT csv, DELIMITER ',', HEADER true);"
+cat data.csv | psql --dbname=postgres://postgres:123456@localhost:5432/test \
+--command "COPY information(sum_a_plus_c, column_d) FROM STDIN WITH (FORMAT csv, DELIMITER ',', HEADER true);"
 ```
 
 ## Export Data from Postgres
 
 ```sh
-psql --dbname=postgres://postgres:123456@localhost:5432/test --command "select * from information where id >= 1;" --csv
+psql --dbname=postgres://postgres:123456@localhost:5432/test \
+--command "select * from information where id >= 1;" --csv
+```
+or
+```sh
+psql --dbname=postgres://postgres:123456@localhost:5432/test \
+--command "COPY (select * from information where id >= 1) TO STDOUT WITH CSV DELIMITER ','"
 ```
 
