@@ -78,5 +78,9 @@ CREATE TABLE information (
 cat data.csv | psql --dbname=postgres://postgres:123456@localhost:5432/test --command "COPY information(sum_a_plus_c, column_d) FROM STDIN WITH (FORMAT csv, DELIMITER ',', HEADER true);"
 ```
 
+## Export Data from Postgres
 
+```sh
+psql --dbname=postgres://postgres:123456@localhost:5432/test --command "select * from information where id >= 1;" --csv
+```
 
